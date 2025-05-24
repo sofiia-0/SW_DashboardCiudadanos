@@ -10,6 +10,21 @@
             </a>
         </div>
     </x-slot>
+    @if(session('error'))
+    <div class="max-w-7xl mx-auto mt-4">
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl">
+            {{ session('error') }}
+        </div>
+    </div>
+@endif
+
+@if(session('success'))
+    <div class="max-w-7xl mx-auto mt-4">
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl">
+            {{ session('success') }}
+        </div>
+    </div>
+@endif
 
     <div class="py-14 bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-950 min-h-screen">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">

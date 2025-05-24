@@ -11,15 +11,28 @@ class CitizenController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        try{
-            $citizens = Citizen::orderBy('first_name', 'asc')->paginate(6);
-        return view('citizens.index', compact('citizens'));
-        }catch(\Exception $e){
-            return redirect()->route('citizens.index')->with('error', 'Error fetching citizens: ' . $e->getMessage());
-        }
+ public function index(Request $request) {
+    try {
+        $busqueda = $request->input('busqueda');
+
+        // En controlador:
+     $citizens = Citizen::with('city')
+    ->when($busqueda, function ($query, $busqueda) {
+        return $query->where('first_name', 'like', '%' . $busqueda . '%')
+            ->orWhere('last_name', 'like', '%' . $busqueda . '%')
+            ->orWhereHas('city', function ($q) use ($busqueda) {
+                $q->where('name', 'like', '%' . $busqueda . '%');
+            });
+    })
+    ->orderBy('first_name', 'asc')
+    ->paginate(6);
+    return view('citizens.index', compact('citizens', 'busqueda'));
+
+    } catch (\Exception $e) {
+        return redirect()->route('citizens.index')->with('error', 'Error fetching citizens: ' . $e->getMessage());
     }
+}
+
 
     /**
      * Show the form for creating a new resource.

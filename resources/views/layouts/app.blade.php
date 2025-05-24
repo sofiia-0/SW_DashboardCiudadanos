@@ -39,7 +39,6 @@
             <script>
             Swal.fire({
                 title: "¡Éxito!",
-                text: "La ciudad se registró correctamente.",
                 icon: "success",
                 showConfirmButton: false,
                 timer: 2000,

@@ -98,14 +98,25 @@ class CityController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
-        try {
-            $city = City::findOrFail($id);
-            $city->delete();
-            return redirect()->route('cities.index')->with('success', 'City deleted successfully');
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to delete city'], 500);
+    public function destroy(string $id){
+    try {
+        $city = City::findOrFail($id);
+
+        // Verifica si hay ciudadanos registrados en esta ciudad
+        if ($city->citizens()->count() > 0) {
+            return redirect()->back()->with('error', 'No se puede eliminar la ciudad porque tiene ciudadanos registrados.');
         }
+
+        $city->delete();
+        return redirect()->route('cities.index')->with('success', 'City deleted successfully');
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Failed to delete city'], 500);
     }
+    }
+
+  
+
+   
+
+    
 }
