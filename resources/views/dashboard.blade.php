@@ -9,24 +9,38 @@
 
         {{-- Cards con degradados --}}
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-gradient-to-r from-indigo-500 via-indigo-600 to-indigo-700 p-6 rounded-xl shadow transition transform hover:scale-105 hover:shadow-lg text-white font-poppins">
+            <div class="bg-gradient-to-r from-indigo-500 via-indigo-600 to-indigo-700 p-6 rounded-xl shadow transition transform hover:scale-105 hover:shadow-lg text-white font-poppins flex flex-col items-center justify-center text-center h-full">
                 <h3 class="text-lg font-semibold">Total de Ciudades 🏙️</h3>
                 <p class="text-3xl mt-2">{{ $totalCiudades }}</p>
             </div>
 
-            <div class="bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 p-6 rounded-xl shadow transition transform hover:scale-105 hover:shadow-lg text-white font-poppins">
+            <div class="bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 p-6 rounded-xl shadow transition transform hover:scale-105 hover:shadow-lg text-white font-poppins flex flex-col items-center justify-center text-center h-full">
                 <h3 class="text-lg font-semibold">Total de Ciudadanos 👤</h3>
                 <p class="text-3xl mt-2">{{ $totalCiudadanos }}</p>
             </div>
 
-            <div class="bg-gradient-to-r from-green-500 via-green-600 to-green-700 p-6 rounded-xl shadow transition transform hover:scale-105 hover:shadow-lg text-white font-poppins">
-                <h3 class="text-lg font-semibold">Ciudadanos por Ciudad 🏘️</h3>
-                <ul class="mt-2 space-y-1 text-sm">
+            <div class="bg-gradient-to-r from-green-500 via-green-600 to-green-700 p-6 rounded-xl shadow transition transform hover:scale-105 hover:shadow-lg text-white font-poppins flex flex-col items-center justify-center text-center h-full">
+                <h3 class="text-lg font-semibold mb-4">Ciudadanos por Ciudad 🏘️</h3>
+                <div class="relative w-full">
+                    <select id="ciudadSelector" 
+                    class="block w-full bg-green-700 text-white font-semibold rounded-lg shadow-inner px-4 py-3 pr-10 appearance-none focus:outline-none focus:ring-2 focus:ring-green-300">
+                    <option value="">Selecciona una ciudad</option>
                     @foreach ($ciudadanosPorCiudad as $ciudad)
-                        <li>{{ $ciudad->name }}: {{ $ciudad->citizens_count }}</li>
+                    <option value="{{ $ciudad->id }}">{{ $ciudad->name }}</option>
                     @endforeach
-                </ul>
+                    </select>
+                    <svg class="w-5 h-5 absolute top-1/2 right-4 transform -translate-y-1/2 pointer-events-none text-green-200" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+        </div>
+
+            <div id="ciudadInfo" class="mt-4 text-white text-lg font-medium hidden">
+             <!-- Aquí se mostrará el resultado dinámico -->
             </div>
+    
+        </div>
+
+
         </div>
 
         {{-- Selector para elegir ciudad --}}
@@ -102,6 +116,29 @@
                 }
             }
         });
+
+        const ciudadSelector = document.getElementById('ciudadSelector');
+    const ciudadInfo = document.getElementById('ciudadInfo');
+
+    const data = {
+        @foreach ($ciudadanosPorCiudad as $ciudad)
+            '{{ $ciudad->id }}': {
+                name: '{{ $ciudad->name }}',
+                count: {{ $ciudad->citizens_count }}
+            },
+        @endforeach
+    };
+
+    ciudadSelector.addEventListener('change', function () {
+        const selectedId = this.value;
+        if (selectedId && data[selectedId]) {
+            ciudadInfo.textContent = `${data[selectedId].name} tiene ${data[selectedId].count} ciudadano(s) registrados.`;
+            ciudadInfo.classList.remove('hidden');
+        } else {
+            ciudadInfo.classList.add('hidden');
+        }
+    });
+
     </script>
 
 </x-app-layout>
