@@ -13,6 +13,18 @@
             </a>
         </div>
     </x-slot>
+    <div class="flex justify-end mb-6 max-w-7xl mx-auto">
+        <form method="GET" action="{{ route('citizens.index') }}" class="flex gap-2 w-full max-w-md">
+            <input type="text" name="busqueda" placeholder="Buscar por nombre o ciudad" value="{{ request('busqueda') }}"
+                class="w-full px-4 py-2 border border-gray-300 rounded-xl dark:border-gray-700 dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm focus:ring-2 focus:ring-blue-400" />
+            <button type="submit"
+                class="px-5 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200">
+                Buscar
+            </button>
+        </form>
+    </div>
+
+
 
     @php
         $groupedCitizens = $citizens->groupBy(fn($citizen) => $citizen->city->name ?? __('No city'));
@@ -172,4 +184,4 @@
     <div class="mt-10 flex justify-center">
         {{ $citizens->links() }}
     </div>
-</x-app-layout>
+</x-app-layout> 
