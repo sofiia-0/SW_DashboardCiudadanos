@@ -27,6 +27,8 @@ Route::resource('cities', CityController::class);
 Route::resource('citizens', CitizenController::class);
 Route::get('reports', [ReportCitizenController::class, 'send_report'])->name('report');
 Route::post('/cities/import', [CityController::class, 'import'])->name('cities.import');
+Route::post('/citizens/import', [CitizenController::class, 'import'])->name('citizens.import');
+
 
 
 require __DIR__.'/auth.php';
