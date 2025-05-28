@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\CitizensImport;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use App\Models\Citizen;
 use App\Models\City;
@@ -130,4 +132,18 @@ class CitizenController extends Controller
             return redirect()->route('citizens.index')->with('error', 'Error deleting citizen: ' . $e->getMessage());
         }
     }
+
+    /*
+     * Import citizens from an Excel file.
+     */
+    public function import(Request $request)
+{
+    $request->validate([
+        'file' => 'required|file|mimes:xlsx,csv,xls',
+    ]);
+
+    Excel::import(new CitizensImport, $request->file('file'));
+
+    return redirect()->back()->with('success', 'Ciudadanos importados correctamente');
+}
 }
