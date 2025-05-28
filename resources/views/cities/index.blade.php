@@ -4,12 +4,36 @@
             <h2 class="font-bold text-3xl text-gray-900 dark:text-white tracking-tight">
                 {{ __('Cities') }}
             </h2>
-            <a href="{{ route('cities.create') }}" class="inline-flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-base font-semibold rounded-xl shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
-                {{ __('New City') }}
-            </a>
+
+            <div class="flex gap-4">
+                <a href="{{ route('cities.create') }}" class="inline-flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-base font-semibold rounded-xl shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+                    {{ __('New City') }}
+                </a>
+
+                <!-- Botón para mostrar formulario de importación -->
+                <button id="btnImportToggle" class="inline-flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white text-base font-semibold rounded-xl shadow-lg hover:from-green-700 hover:to-emerald-700 transition-all duration-200">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v-8m16 8v-8M12 20V4"></path></svg>
+                    {{ __('Import Cities') }}
+                </button>
+            </div>
         </div>
+
+        <!-- Formulario de importación oculto inicialmente -->
+        <div id="importFormContainer" class="mt-4 max-w-md hidden">
+            <form action="{{ route('cities.import') }}" method="POST" enctype="multipart/form-data" class="flex gap-2">
+                @csrf
+                <input type="file" name="file" accept=".csv,.xlsx" required class="rounded border border-gray-300 px-3 py-2">
+                <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+                    {{ __('Upload') }}
+                </button>
+            </form>
+        </div>
+
     </x-slot>
+
+     {{-- Aquí va el resto del index que ya tienes (listado, mensajes, etc.) --}}
+
     @if(session('error'))
     <div class="max-w-7xl mx-auto mt-4">
         <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl">
@@ -100,4 +124,17 @@
             {{ $cities->links() }}
         </div>
     </div>
+
+<script>
+        // Mostrar / ocultar formulario de importación
+        document.getElementById('btnImportToggle').addEventListener('click', function() {
+            const container = document.getElementById('importFormContainer');
+            if(container.classList.contains('hidden')){
+                container.classList.remove('hidden');
+            } else {
+                container.classList.add('hidden');
+            }
+        });
+    </script>
+
 </x-app-layout>
