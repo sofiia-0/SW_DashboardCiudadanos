@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\City;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\CitiesImport;
 
 class CityController extends Controller
 {
@@ -114,9 +116,15 @@ class CityController extends Controller
     }
     }
 
-  
+    public function import(Request $request)
+{
+    $request->validate([
+        'file' => 'required|file|mimes:xlsx,csv',
+    ]);
 
-   
+    Excel::import(new CitiesImport, $request->file('file'));
 
-    
+    return redirect()->route('cities.index')->with('success', 'Ciudades importadas correctamente.');
+}
+
 }

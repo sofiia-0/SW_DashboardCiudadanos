@@ -7,6 +7,7 @@ use App\Http\Controllers\CitizenController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ReportCitizenController;
 
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -25,7 +26,7 @@ Route::middleware('auth')->group(function () {
 Route::resource('cities', CityController::class);
 Route::resource('citizens', CitizenController::class);
 Route::get('reports', [ReportCitizenController::class, 'send_report'])->name('report');
-//Route::get('/reports', [ReportCitizenController::class, 'send_report'])->name('report');
+Route::post('/cities/import', [CityController::class, 'import'])->name('cities.import');
 
 
 require __DIR__.'/auth.php';
